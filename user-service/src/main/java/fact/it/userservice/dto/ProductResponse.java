@@ -1,18 +1,21 @@
 package fact.it.userservice.dto;
 
+import fact.it.userservice.model.Category;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.antlr.v4.runtime.misc.NotNull;
+
+import java.math.BigDecimal;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRequest {
-    //@NotNull (validatie hier implementeren)
+public class ProductResponse {
+    //private String id;
+    //private String skuCode;
     private String name;
-    private String email;
-    private String password;
+    private Category category;
+    private BigDecimal price;
 }
