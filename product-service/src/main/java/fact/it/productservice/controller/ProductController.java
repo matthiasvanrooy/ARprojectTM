@@ -1,6 +1,5 @@
 package fact.it.productservice.controller;
 
-import fact.it.productservice.dto.ProductRequest;
 import fact.it.productservice.dto.ProductResponse;
 import fact.it.productservice.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -16,18 +15,18 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.OK)
-    public void createProduct
-            (@RequestBody ProductRequest productRequest) {
-        productService.createProduct(productRequest);
-    }
+//    @PostMapping
+//    @ResponseStatus(HttpStatus.OK)
+//    public void createProduct
+//            (@RequestBody ProductRequest productRequest) {
+//        productService.createProduct(productRequest);
+//    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ProductResponse> getAllProductsBySkuCode
+    public List<ProductResponse> getProductBySkuCode
             (@RequestParam List<String> skuCode) {
-        return productService.getAllProductsBySkuCode(skuCode);
+        return productService.getProductBySkuCode(skuCode);
     }
 
     @GetMapping("/all")
