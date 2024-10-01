@@ -15,16 +15,16 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    public void createProduct(ProductRequest productRequest){
-        Product product = Product.builder()
-                .skuCode(productRequest.getSkuCode())
-                .name(productRequest.getName())
-                .description(productRequest.getDescription())
-                .price(productRequest.getPrice())
-                .build();
-
-        productRepository.save(product);
-    }
+//    public void createProduct(ProductRequest productRequest){
+//        Product product = Product.builder()
+//                .skuCode(productRequest.getSkuCode())
+//                .name(productRequest.getName())
+//                .category(productRequest.getCategory())
+//                .price(productRequest.getPrice())
+//                .build();
+//
+//        productRepository.save(product);
+//    }
 
     public List<ProductResponse> getAllProducts() {
         List<Product> products = productRepository.findAll();
@@ -32,7 +32,7 @@ public class ProductService {
         return products.stream().map(this::mapToProductResponse).toList();
     }
 
-    public List<ProductResponse> getAllProductsBySkuCode(List<String> skuCode) {
+    public List<ProductResponse> getProductBySkuCode(List<String> skuCode) {
         List<Product> products = productRepository.findBySkuCodeIn(skuCode);
 
         return products.stream().map(this::mapToProductResponse).toList();
@@ -40,10 +40,10 @@ public class ProductService {
 
     private ProductResponse mapToProductResponse(Product product) {
         return ProductResponse.builder()
-                .id(product.getId())
-                .skuCode(product.getSkuCode())
+                //.id(product.getId())
+                //.skuCode(product.getSkuCode())
                 .name(product.getName())
-                .description(product.getDescription())
+                .category(product.getCategory())
                 .price(product.getPrice())
                 .build();
     }
