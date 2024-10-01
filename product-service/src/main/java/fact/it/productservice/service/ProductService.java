@@ -1,6 +1,6 @@
 package fact.it.productservice.service;
 
-import fact.it.productservice.dto.ProductRequest;
+//import fact.it.productservice.dto.ProductRequest;
 import fact.it.productservice.dto.ProductResponse;
 import fact.it.productservice.model.Product;
 import fact.it.productservice.repository.ProductRepository;
