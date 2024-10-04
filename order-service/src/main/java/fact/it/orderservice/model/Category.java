@@ -1,4 +1,4 @@
-package fact.it.productservice.model;
+package fact.it.orderservice.model;
 
 public enum Category {
     VEGETABLE,
