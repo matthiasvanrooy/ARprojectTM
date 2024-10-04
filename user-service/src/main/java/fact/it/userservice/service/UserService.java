@@ -7,6 +7,7 @@ import fact.it.userservice.exception.ProductAlreadyScannedException;
 import fact.it.userservice.model.User;
 import fact.it.userservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -18,6 +19,9 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserRepository userRepository;
     private final WebClient.Builder webClientBuilder;
+
+    @Value("${productservice.baseurl}")
+    private String productServiceBaseUrl;
 
         public void createUser(UserRequest userRequest){
         User user = User.builder()
@@ -75,7 +79,7 @@ public class UserService {
     private ProductResponse getProductById(String productId) {
         return webClientBuilder.build()
                 .get()
-                .uri("http://product-service/api/products/" + productId)
+                .uri("http://"+ productServiceBaseUrl + "/api/product/" + productId)
                 .retrieve()
                 .bodyToMono(ProductResponse.class)
                 .block();

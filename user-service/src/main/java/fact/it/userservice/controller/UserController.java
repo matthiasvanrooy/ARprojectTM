@@ -1,5 +1,6 @@
 package fact.it.userservice.controller;
 
+import fact.it.userservice.dto.ProductResponse;
 import fact.it.userservice.dto.UserRequest;
 import fact.it.userservice.dto.UserResponse;
 import fact.it.userservice.exception.ProductAlreadyScannedException;
@@ -25,6 +26,12 @@ public class UserController {
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     public List<UserResponse> getAllUsers() { return userservice.getAllUsers();}
+
+    @GetMapping("/{userId}/products/")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductResponse> getUserProducts(@PathVariable Long userId) {
+        return userservice.getUserProducts(userId);
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
