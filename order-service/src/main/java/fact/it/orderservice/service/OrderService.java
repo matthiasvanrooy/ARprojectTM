@@ -6,6 +6,7 @@ import fact.it.orderservice.model.OrderLineItem;
 import fact.it.orderservice.repository.OrderRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -21,6 +22,12 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final WebClient webClient;
+
+    @Value("${productservice.baseurl}")
+    private String productServiceBaseUrl;
+
+    @Value("${inventoryservice.baseurl}")
+    private String inventoryServiceBaseUrl;
 
     public boolean placeOrder(OrderRequest orderRequest) {
         Order order = new Order();
@@ -38,7 +45,7 @@ public class OrderService {
                 .toList();
 
         InventoryResponse[] inventoryResponseArray = webClient.get()
-                .uri("http://localhost:8082/api/inventory",
+                .uri("http://" + inventoryServiceBaseUrl + "/api/inventory",
                         uriBuilder -> uriBuilder.queryParam("skuCode", skuCodes).build())
                 .retrieve()
                 .bodyToMono(InventoryResponse[].class)
@@ -49,7 +56,7 @@ public class OrderService {
 
         if(allProductsInStock){
             ProductResponse[] productResponseArray = webClient.get()
-                    .uri("http://localhost:8080/api/product",
+                    .uri("http://" + productServiceBaseUrl + "/api/product",
                             uriBuilder -> uriBuilder.queryParam("skuCode", skuCodes).build())
                     .retrieve()
                     .bodyToMono(ProductResponse[].class)
