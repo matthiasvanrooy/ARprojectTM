@@ -82,7 +82,7 @@ services:
  user-service:
   depends_on:
     - product-service
-    - inventory-service
+    - mysql-user
   image: matthiasvanrooy/user-service
   ports:
     - 8083:8083
