@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +37,13 @@ public class ProductService {
         List<Product> products = productRepository.findBySkuCodeIn(skuCode);
 
         return products.stream().map(this::mapToProductResponse).toList();
+    }
+
+    public List<ProductResponse> getProductsByUserId(Long userId) {
+        List<Product> products = productRepository.findByUserId(userId);
+        return products.stream()
+                .map(this::mapToProductResponse)
+                .collect(Collectors.toList());
     }
 
     private ProductResponse mapToProductResponse(Product product) {

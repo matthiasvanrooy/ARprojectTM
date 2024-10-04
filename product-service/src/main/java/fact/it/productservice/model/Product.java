@@ -19,4 +19,8 @@ public class Product {
     private String name;
     private BigDecimal price;
     private Category category;
+
+//    @ManyToOne
+//    @JoinColumn(name = "user_id")
+//    private User user;
 }
