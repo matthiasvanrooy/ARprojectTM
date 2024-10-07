@@ -47,11 +47,18 @@ public class UserService {
                     .toList();
     }
 
+    //Update vervangt nu enkel de ingevulde velden. Indien een veld wordt leeggelaten, zal dit niets overschrijven? Is dit wel nuttig? Denk het eigenlijk niet.
     public UserResponse updateUser(Long id, UserRequest userRequest) {
         User user = userRepository.findById(id).orElseThrow();
-        user.setName(userRequest.getName());
-        user.setEmail(userRequest.getEmail());
-        user.setPassword(userRequest.getPassword());
+        if (userRequest.getName() != null) {
+            user.setName(userRequest.getName());
+        }
+        if (userRequest.getEmail() != null) {
+            user.setEmail(userRequest.getEmail());
+        }
+        if (userRequest.getPassword() != null) {
+            user.setPassword(userRequest.getPassword());
+        }
 
         userRepository.save(user);
 
@@ -88,7 +95,8 @@ public class UserService {
     private UserResponse mapToUserResponse(User user) {
         return UserResponse.builder()
                 .name(user.getName())
-                //.email(user.getEmail())
+                .email(user.getEmail())
+                //.password(user.getPassword())
                 .build();
     }
 
