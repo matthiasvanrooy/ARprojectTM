@@ -34,9 +34,9 @@ services:
    MYSQL_ROOT_PASSWORD: abc123
     
  product-service:
+  build: ./product-service
   depends_on:
     - mongo-products
-  image: matthiasvanrooy/product-service
   ports:
     - 8080:8080
   links:
@@ -46,9 +46,9 @@ services:
    MONGODB_HOST: mongo-products
    
  inventory-service:
+  build: ./inventory-service
   depends_on:
     - mysql-inventory
-  image: matthiasvanrooy/inventory-service
   ports:
     - 8082:8082
   links:
@@ -60,11 +60,11 @@ services:
    MYSQL_DB_PORT: 3307
 
  order-service:
+  build: ./order-service
   depends_on:
     - product-service
     - inventory-service
     - mysql-order
-  image: matthiasvanrooy/order-service
   ports:
     - 8081:8081
   links:
@@ -80,10 +80,10 @@ services:
    MYSQL_DB_PORT: 3306
 
  user-service:
+  build: ./user-service
   depends_on:
     - product-service
     - mysql-user
-  image: matthiasvanrooy/user-service
   ports:
     - 8083:8083
   links:
@@ -100,3 +100,4 @@ volumes:
  mongodb_product_data:
  mysql_inventory_data:
  mysql_order_data:
+ mysql_user_data:
