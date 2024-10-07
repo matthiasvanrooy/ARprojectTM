@@ -23,6 +23,11 @@ services:
     - mysql_inventory_data:/var/lib/mysql
   environment:
    MYSQL_ROOT_PASSWORD: abc123
+  healthcheck:
+    test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+    interval: 10s
+    timeout: 5s
+    retries: 5
 
  mysql-user:
   image: mysql:latest
@@ -32,6 +37,11 @@ services:
     - mysql_user_data:/var/lib/mysql
   environment:
    MYSQL_ROOT_PASSWORD: abc123
+  healthcheck:
+    test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+    interval: 10s
+    timeout: 5s
+    retries: 5
 
  product-service:
   build: ./product-service
