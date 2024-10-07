@@ -14,6 +14,7 @@ services:
     - mysql_order_data:/var/lib/mysql
   environment:
    MYSQL_ROOT_PASSWORD: abc123
+   MYSQL_DATABASE: orders
 
  mysql-inventory:
   image: mysql:latest
@@ -23,6 +24,7 @@ services:
     - mysql_inventory_data:/var/lib/mysql
   environment:
    MYSQL_ROOT_PASSWORD: abc123
+   MYSQL_DATABASE: inventory
   healthcheck:
     test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
     interval: 10s
@@ -37,6 +39,7 @@ services:
     - mysql_user_data:/var/lib/mysql
   environment:
    MYSQL_ROOT_PASSWORD: abc123
+   MYSQL_DATABASE: users
   healthcheck:
     test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
     interval: 10s
