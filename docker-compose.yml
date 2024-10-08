@@ -5,6 +5,11 @@ services:
     - 27017:27017
   volumes:
     - mongodb_product_data:/data/db
+  healthcheck:
+    test: ["CMD", "echo", "MongoDB is running"]
+    interval: 10s
+    timeout: 5s
+    retries: 5
 
  mysql-order:
   image: mysql:latest
@@ -54,7 +59,8 @@ services:
  product-service:
   build: ./product-service
   depends_on:
-    - mongo-products
+    mongo-products:
+      condition: service_healthy
   ports:
     - 8080:8080
   environment:
@@ -64,21 +70,25 @@ services:
  inventory-service:
   build: ./inventory-service
   depends_on:
-    - mysql-inventory
+    mysql-inventory:
+      condition: service_healthy
+    order-service:
+      condition: service_started
   ports:
     - 8082:8082
   environment:
    MYSQL_DB_USERNAME: root
    MYSQL_DB_PASSWORD: abc123
    MYSQL_DB_HOST: mysql-inventory
-   MYSQL_DB_PORT: 3307
+   MYSQL_DB_PORT: 3306
 
  order-service:
   build: ./order-service
   depends_on:
-    - product-service
-    - inventory-service
-    - mysql-order
+    product-service:
+      condition: service_started
+    mysql-order:
+      condition: service_healthy
   ports:
     - 8081:8081
   environment:
@@ -92,8 +102,10 @@ services:
  user-service:
   build: ./user-service
   depends_on:
-    - product-service
-    - mysql-user
+    product-service:
+      condition: service_started
+    mysql-user:
+      condition: service_healthy
   ports:
     - 8083:8083
   environment:
@@ -101,7 +113,7 @@ services:
    MYSQL_DB_USERNAME: root
    MYSQL_DB_PASSWORD: abc123
    MYSQL_DB_HOST: mysql-user
-   MYSQL_DB_PORT: 3308
+   MYSQL_DB_PORT: 3306
 
 volumes:
  mongodb_product_data:
