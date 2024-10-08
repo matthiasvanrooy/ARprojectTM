@@ -79,12 +79,12 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public void addProductToUser(Long userId, String skucode) {
+    public void addProductToUser(Long userId, String skuCode) {
         User user = userRepository.findById(userId).orElseThrow();
-        if (user.getProductSkucodes().contains(skucode)) {
+        if (user.getProductSkucodes().contains(skuCode)) {
             throw new ProductAlreadyScannedException("You have already scanned this product!");
         }
-        user.getProductSkucodes().add(skucode);
+        user.getProductSkucodes().add(skuCode);
         userRepository.save(user);
     }
 
