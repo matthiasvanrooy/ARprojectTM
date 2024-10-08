@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
  mongo-products:
   image: mongo:latest
@@ -21,7 +23,7 @@ services:
    MYSQL_ROOT_PASSWORD: abc123
    MYSQL_DATABASE: orderdb
   healthcheck:
-    test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+    test: [ "CMD", "mysqladmin", "ping", "-h", "127.0.0.1" ]
     interval: 10s
     timeout: 5s
     retries: 5
@@ -36,7 +38,7 @@ services:
    MYSQL_ROOT_PASSWORD: abc123
    MYSQL_DATABASE: inventorydb
   healthcheck:
-    test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+    test: [ "CMD", "mysqladmin", "ping", "-h", "127.0.0.1" ]
     interval: 10s
     timeout: 5s
     retries: 5
@@ -51,13 +53,13 @@ services:
    MYSQL_ROOT_PASSWORD: abc123
    MYSQL_DATABASE: userdb
   healthcheck:
-    test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+    test: [ "CMD", "mysqladmin", "ping", "-h", "127.0.0.1" ]
     interval: 10s
     timeout: 5s
     retries: 5
 
  product-service:
-  build: ./product-service
+  image: matthivr1987/product-service
   depends_on:
     mongo-products:
       condition: service_healthy
@@ -68,7 +70,7 @@ services:
    MONGODB_HOST: mongo-products
 
  inventory-service:
-  build: ./inventory-service
+  image: matthivr1987/inventory-service
   depends_on:
     mysql-inventory:
       condition: service_healthy
@@ -83,7 +85,7 @@ services:
    MYSQL_DB_PORT: 3306
 
  order-service:
-  build: ./order-service
+  image: matthivr1987/order-service
   depends_on:
     product-service:
       condition: service_started
@@ -100,7 +102,7 @@ services:
    MYSQL_DB_PORT: 3306
 
  user-service:
-  build: ./user-service
+  image: matthivr1987/user-service
   depends_on:
     product-service:
       condition: service_started
