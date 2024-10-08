@@ -33,6 +33,11 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public UserResponse getUserById(Long id) {
+        User user = userRepository.findById(id).orElseThrow();
+        return mapToUserResponse(user);
+    }
+
     public List<UserResponse> getUserByEmail(String email) {
         List<User> users = userRepository.findByEmail(email);
 
@@ -47,11 +52,18 @@ public class UserService {
                     .toList();
     }
 
+    //Update vervangt nu enkel de ingevulde velden. Indien een veld wordt leeggelaten, zal dit niets overschrijven? Is dit wel nuttig? Denk het eigenlijk niet.
     public UserResponse updateUser(Long id, UserRequest userRequest) {
         User user = userRepository.findById(id).orElseThrow();
-        user.setName(userRequest.getName());
-        user.setEmail(userRequest.getEmail());
-        user.setPassword(userRequest.getPassword());
+        if (userRequest.getName() != null) {
+            user.setName(userRequest.getName());
+        }
+        if (userRequest.getEmail() != null) {
+            user.setEmail(userRequest.getEmail());
+        }
+        if (userRequest.getPassword() != null) {
+            user.setPassword(userRequest.getPassword());
+        }
 
         userRepository.save(user);
 
@@ -63,7 +75,7 @@ public class UserService {
         List<String> productIds = user.getProductIds();
 
         return productIds.stream()
-                .map(this::getProductById)
+                .map(this::getProductBySkuCode)
                 .collect(Collectors.toList());
     }
 
@@ -76,19 +88,30 @@ public class UserService {
         userRepository.save(user);
     }
 
-    private ProductResponse getProductById(String productId) {
+    private ProductResponse getProductBySkuCode(String skuCode) {
         return webClientBuilder.build()
                 .get()
-                .uri("http://"+ productServiceBaseUrl + "/api/product/" + productId)
+                .uri("http://"+ productServiceBaseUrl + "/api/product?skuCode=" + skuCode)
                 .retrieve()
                 .bodyToMono(ProductResponse.class)
                 .block();
     }
 
+//    private ProductResponse getProductById(String productId) {
+//        return webClientBuilder.build()
+//                .get()
+//                .uri("http://"+ productServiceBaseUrl + "/api/product/" + productId)
+//                .retrieve()
+//                .bodyToMono(ProductResponse.class)
+//                .block();
+//    }
+
     private UserResponse mapToUserResponse(User user) {
         return UserResponse.builder()
                 .name(user.getName())
-                //.email(user.getEmail())
+                .email(user.getEmail())
+                //.password(user.getPassword())
+                .productIds(user.getProductIds())
                 .build();
     }
 
