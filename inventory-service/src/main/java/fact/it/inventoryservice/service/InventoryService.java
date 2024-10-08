@@ -19,21 +19,21 @@ public class InventoryService {
 
     private final InventoryRepository inventoryRepository;
 
-    @PostConstruct
-    public void loadData() {
-        if(inventoryRepository.count() <= 0){
-            StockItem stockItem = new StockItem();
-            stockItem.setSkuCode("tube6in");
-            stockItem.setQuantity(100);
-
-            StockItem stockItem1 = new StockItem();
-            stockItem1.setSkuCode("beam10ft");
-            stockItem1.setQuantity(0);
-
-            inventoryRepository.save(stockItem);
-            inventoryRepository.save(stockItem1);
-        }
-    }
+//    @PostConstruct
+//    public void loadData() {
+//        if(inventoryRepository.count() <= 0){
+//            StockItem stockItem = new StockItem();
+//            stockItem.setSkuCode("tube6in");
+//            stockItem.setQuantity(100);
+//
+//            StockItem stockItem1 = new StockItem();
+//            stockItem1.setSkuCode("beam10ft");
+//            stockItem1.setQuantity(0);
+//
+//            inventoryRepository.save(stockItem);
+//            inventoryRepository.save(stockItem1);
+//        }
+//    }
 
     @Transactional(readOnly = true)
     public List<InventoryResponse> isInStock(List<String> skuCode) {
