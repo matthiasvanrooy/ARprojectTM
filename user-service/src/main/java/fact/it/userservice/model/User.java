@@ -21,5 +21,5 @@ public class User {
     private String password;
 
     @ElementCollection
-    private List<String> productIds;
+    private List<String> productSkucodes;
 }

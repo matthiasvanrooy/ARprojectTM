@@ -53,10 +53,10 @@ public class UserController {
         userservice.updateUser(id, userRequest);
     }
 
-    @PostMapping("/{userId}/products/{productId}")
+    @PostMapping("/{userId}/products/{skucode}")
     @ResponseStatus(HttpStatus.OK)
-    public void addProductToUser(@PathVariable Long userId, @PathVariable String productId) {
-        userservice.addProductToUser(userId, productId);
+    public void addProductToUser(@PathVariable Long userId, @PathVariable String skucode) {
+        userservice.addProductToUser(userId, skucode);
     }
 
     @ExceptionHandler(ProductAlreadyScannedException.class)
