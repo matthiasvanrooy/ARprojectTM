@@ -15,5 +15,5 @@ public class UserResponse {
     private String name;
     private String email;
     //private String password;
-    private List<String> productIds;
+    private List<String> productSkucodes;
 }

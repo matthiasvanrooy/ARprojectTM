@@ -72,19 +72,19 @@ public class UserService {
 
     public List<ProductResponse> getUserProducts(Long userId) {
         User user = userRepository.findById(userId).orElseThrow();
-        List<String> productIds = user.getProductIds();
+        List<String> productIds = user.getProductSkucodes();
 
         return productIds.stream()
                 .map(this::getProductBySkuCode)
                 .collect(Collectors.toList());
     }
 
-    public void addProductToUser(Long userId, String productId) {
+    public void addProductToUser(Long userId, String skucode) {
         User user = userRepository.findById(userId).orElseThrow();
-        if (user.getProductIds().contains(productId)) {
+        if (user.getProductSkucodes().contains(skucode)) {
             throw new ProductAlreadyScannedException("You have already scanned this product!");
         }
-        user.getProductIds().add(productId);
+        user.getProductSkucodes().add(skucode);
         userRepository.save(user);
     }
 
@@ -111,7 +111,7 @@ public class UserService {
                 .name(user.getName())
                 .email(user.getEmail())
                 //.password(user.getPassword())
-                .productIds(user.getProductIds())
+                .productSkucodes(user.getProductSkucodes())
                 .build();
     }
 
