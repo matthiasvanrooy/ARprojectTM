@@ -1,7 +1,6 @@
 package fact.it.productservice.controller;
 
 import fact.it.productservice.dto.ProductResponse;
-import fact.it.productservice.dto.ProductRequest;
 import fact.it.productservice.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
