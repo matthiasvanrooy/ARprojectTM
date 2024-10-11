@@ -6,6 +6,8 @@ import fact.it.productservice.model.Product;
 import fact.it.productservice.repository.ProductRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -19,7 +21,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    @PostConstruct
+    @EventListener(ApplicationReadyEvent.class)
     public void loadData() {
         if(productRepository.count() <= 0){
             Product product = new Product();
