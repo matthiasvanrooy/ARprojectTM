@@ -1,6 +1,7 @@
 package fact.it.productservice.service;
 
 //import fact.it.productservice.dto.ProductRequest;
+import fact.it.productservice.dto.ProductRequest;
 import fact.it.productservice.dto.ProductResponse;
 import fact.it.productservice.model.Product;
 import fact.it.productservice.repository.ProductRepository;
@@ -21,7 +22,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    @EventListener(ApplicationReadyEvent.class)
+    @PostConstruct
     public void loadData() {
         if(productRepository.count() <= 0){
             Product product = new Product();
