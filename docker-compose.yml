@@ -87,6 +87,8 @@ services:
   depends_on:
     product-service:
       condition: service_started
+    inventory-service:
+      condition: service_started
     mysql-order:
       condition: service_healthy
   ports:
