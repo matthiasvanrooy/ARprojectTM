@@ -91,7 +91,7 @@ public class UserService {
     private ProductResponse getProductBySkuCode(String skuCode) {
         return webClientBuilder.build()
                 .get()
-                .uri("http://"+ productServiceBaseUrl + "/api/product?skuCode=" + skuCode)
+                .uri("http://"+ productServiceBaseUrl + "/api/product/" + skuCode)
                 .retrieve()
                 .bodyToMono(ProductResponse.class)
                 .block();
