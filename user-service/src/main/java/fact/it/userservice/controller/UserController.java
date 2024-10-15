@@ -33,10 +33,10 @@ public class UserController {
         return userservice.getUserById(id);
     }
 
-    @GetMapping("/{userId}/products")
+    @GetMapping("/{id}/products")
     @ResponseStatus(HttpStatus.OK)
-    public List<ProductResponse> getUserProducts(@PathVariable Long userId) {
-        return userservice.getUserProducts(userId);
+    public List<ProductResponse> getUserProducts(@PathVariable Long id) {
+        return userservice.getUserProducts(id);
     }
 
     @PostMapping
@@ -53,10 +53,10 @@ public class UserController {
         userservice.updateUser(id, userRequest);
     }
 
-    @PostMapping("/{userId}/products/{skucode}")
+    @PostMapping("/{id}/products/{skuCode}")
     @ResponseStatus(HttpStatus.OK)
-    public void addProductToUser(@PathVariable Long userId, @PathVariable String skucode) {
-        userservice.addProductToUser(userId, skucode);
+    public void addProductToUser(@PathVariable Long id, @PathVariable String skuCode) {
+        userservice.addProductToUser(id, skuCode);
     }
 
     @ExceptionHandler(ProductAlreadyScannedException.class)

@@ -19,23 +19,80 @@ spring:
             - Method=POST
           filters:
             - SetPath=/api/user
+        - id: user-service-email
+          uri: http://${USER_SERVICE_BASEURL:localhost:8083}
+          predicates:
+            - Path=/users
+            - Method=GET
+          filters:
+            - SetPath=/api/user
+        - id: user-service-all
+          uri: http://${USER_SERVICE_BASEURL:localhost:8083}
+          predicates:
+            - Path=/users/all
+            - Method=GET
+          filters:
+            - SetPath=/api/user/all
+        - id: user-service-id
+          uri: http://${USER_SERVICE_BASEURL:localhost:8083}
+          predicates:
+            - Path=/users/{id}
+            - Method=POST
+          filters:
+            - SetPath=/api/user/{id}
+        - id: user-service-products
+          uri: http://${USER_SERVICE_BASEURL:localhost:8083}
+          predicates:
+            - Path=/users/{id}/products
+            - Method=GET
+          filters:
+            - SetPath=/api/user/{id}/products
+        - id: user-service-update
+          uri: http://${USER_SERVICE_BASEURL:localhost:8083}
+          predicates:
+            - Path=/users/{id}
+            - Method=PUT
+          filters:
+            - SetPath=/api/user/{id}
+        - id: user-service-addproduct
+          uri: http://${USER_SERVICE_BASEURL:localhost:8083}
+          predicates:
+            - Path=/users/{id}/products/{skuCode}
+            - Method=POST
+          filters:
+            - SetPath=/api/user/{id}/products/{skuCode}
         - id: product-service
           uri: http://${PRODUCT_SERVICE_BASEURL:localhost:8080}
           predicates:
-            - Path=/products
-            - Method=POST
+            - Path=/products/{skuCode}
+            - Method=GET
           filters:
-            - SetPath=/api/product
+            - SetPath=/api/product/{skuCode}
         - id: product-service-all
           uri: http://${PRODUCT_SERVICE_BASEURL:localhost:8080}
           predicates:
-            - Path=/products
+            - Path=/products/all
             - Method=GET
           filters:
             - SetPath=/api/product/all
+        - id: inventory-service
+          uri: http://${INVENTORY_SERVICE_BASEURL:localhost:8082}
+          predicates:
+            - Path=/inventory
+            - Method=GET
+          filters:
+            - SetPath=/api/inventory
         - id: order-service
           uri: http://${ORDER_SERVICE_BASEURL:localhost:8081}
           predicates:
             - Path=/orders
+            - Method=POST
+          filters:
+            - SetPath=/api/order
+        - id: order-service-all
+          uri: http://${ORDER_SERVICE_BASEURL:localhost:8081}
+          predicates:
+            - Path=/orders
+            - Method=GET
           filters:
             - SetPath=/api/order
