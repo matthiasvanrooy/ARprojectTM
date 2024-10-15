@@ -74,9 +74,7 @@ public class UserService {
         User user = userRepository.findById(id).orElseThrow();
         List<String> productIds = user.getProductSkucodes();
 
-        return productIds.stream()
-                .map(this::getProductBySkuCode)
-                .collect(Collectors.toList());
+        return getProductBySkuCode(productIds);
     }
 
     public void addProductToUser(Long id, String skuCode) {
@@ -88,14 +86,18 @@ public class UserService {
         userRepository.save(user);
     }
 
-    private ProductResponse getProductBySkuCode(String skuCode) {
-        return webClientBuilder.build()
+    // Change your UserService call to use a list if your product service method is expecting it
+    private List<ProductResponse> getProductBySkuCode(List<String> skuCodes) {
+        String skuCodesQueryParam = String.join(",", skuCodes); // Convert the list to a comma-separated string
+                return webClientBuilder.build()
                 .get()
-                .uri("http://"+ productServiceBaseUrl + "/api/product/" + skuCode)
+                .uri("http://" + productServiceBaseUrl + "/api/product/" + skuCodesQueryParam) // Append as query params.retrieve()
                 .retrieve()
-                .bodyToMono(ProductResponse.class)
+                .bodyToFlux(ProductResponse.class)
+                .collectList()
                 .block();
     }
+
 
 //    private ProductResponse getProductById(String productId) {
 //        return webClientBuilder.build()
