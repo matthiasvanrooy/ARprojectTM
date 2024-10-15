@@ -88,10 +88,10 @@ public class UserService {
 
     // Change your UserService call to use a list if your product service method is expecting it
     private List<ProductResponse> getProductBySkuCode(List<String> skuCodes) {
-        String skuCodesQueryParam = String.join(",", skuCodes); // Convert the list to a comma-separated string
+        String skuCodesQueryParam = String.join(",", skuCodes);
                 return webClientBuilder.build()
                 .get()
-                .uri("http://" + productServiceBaseUrl + "/api/product/" + skuCodesQueryParam) // Append as query params.retrieve()
+                .uri("http://" + productServiceBaseUrl + "/api/product/" + skuCodesQueryParam)
                 .retrieve()
                 .bodyToFlux(ProductResponse.class)
                 .collectList()
