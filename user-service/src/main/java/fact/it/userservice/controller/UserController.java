@@ -36,8 +36,10 @@ public class UserController {
     @GetMapping("/{id}/products")
     @ResponseStatus(HttpStatus.OK)
     public List<ProductResponse> getUserProducts(@PathVariable Long id) {
-        return userservice.getUserProducts(id);
+        List<ProductResponse> products = userservice.getUserProducts(id);
+        return products;
     }
+
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
