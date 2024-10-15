@@ -64,10 +64,10 @@ spring:
         - id: product-service
           uri: http://${PRODUCT_SERVICE_BASEURL:localhost:8080}
           predicates:
-            - Path=/products/{skuCode}
+            - Path=/products
             - Method=GET
           filters:
-            - SetPath=/api/product/{skuCode}
+            - SetPath=/api/product
         - id: product-service-all
           uri: http://${PRODUCT_SERVICE_BASEURL:localhost:8080}
           predicates:
