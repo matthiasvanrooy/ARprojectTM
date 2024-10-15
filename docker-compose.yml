@@ -72,8 +72,6 @@ services:
   depends_on:
     mysql-inventory:
       condition: service_healthy
-    order-service:
-      condition: service_started
   ports:
     - 8082:8082
   environment:
