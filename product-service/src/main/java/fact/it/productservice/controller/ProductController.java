@@ -15,10 +15,10 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @GetMapping
+    @GetMapping("/{skuCode}")
     @ResponseStatus(HttpStatus.OK)
     public List<ProductResponse> getProductBySkuCode
-            (@RequestParam List<String> skuCode) {
+            (@PathVariable List<String> skuCode) {
         return productService.getProductBySkuCode(skuCode);
     }
 
