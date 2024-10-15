@@ -1,5 +1,5 @@
 server:
-  port: 8083
+  port: 8084
 
 logging:
   level:
@@ -7,24 +7,18 @@ logging:
     org.springframework.cloud.gateway: INFO
     org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator: INFO
     reactor.netty: INFO
-    org.springframework.security: TRACE
 
 spring:
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: ${GOOGLE_CLIENTID}
-            client-secret: ${GOOGLE_CLIENTSECRET}
-            scope: openid,profile,email
-      resourceserver:
-        jwt:
-          issuer-uri: https://accounts.google.com
-          jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
   cloud:
     gateway:
       routes:
+        - id: user-service
+          uri: http://${USER_SERVICE_BASEURL:localhost:8083}
+          predicates:
+            - Path=/users
+            - Method=POST
+          filters:
+            - SetPath=/api/user
         - id: product-service
           uri: http://${PRODUCT_SERVICE_BASEURL:localhost:8080}
           predicates:

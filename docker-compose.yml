@@ -6,7 +6,7 @@ services:
   volumes:
     - mongodb_product_data:/data/db
   healthcheck:
-    test: ["CMD", "echo", "MongoDB is running"]
+    test: ["CMD", "mongosh", "--eval", "db.runCommand({ ping: 1 })"]
     interval: 10s
     timeout: 5s
     retries: 5
@@ -114,6 +114,25 @@ services:
    MYSQL_DB_PASSWORD: abc123
    MYSQL_DB_HOST: mysql-user
    MYSQL_DB_PORT: 3306
+
+ api-gateway:
+   depends_on:
+     product-service:
+       condition: service_started
+     order-service:
+       condition: service_started
+     user-service:
+       condition: service_started
+     inventory-service:
+       condition: service_started
+   image: matthivr1987/api-gateway
+   ports:
+     - 8084:8084
+   environment:
+     PRODUCT_SERVICE_BASEURL: product-service:8080
+     ORDER_SERVICE_BASEURL: order-service:8081
+     INVENTORY_SERVICE_BASEURL: inventory-service:8082
+     USER_SERVICE_BASEURL: user-service:8083
 
 volumes:
  mongodb_product_data:
