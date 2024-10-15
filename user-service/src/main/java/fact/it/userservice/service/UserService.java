@@ -88,14 +88,15 @@ public class UserService {
 
     // Change your UserService call to use a list if your product service method is expecting it
     private List<ProductResponse> getProductBySkuCode(List<String> skuCodes) {
-        String skuCodesQueryParam = String.join(",", skuCodes);
-                return webClientBuilder.build()
+        ProductResponse[] productResponseArray = webClientBuilder.build()
                 .get()
-                .uri("http://" + productServiceBaseUrl + "/api/product/" + skuCodesQueryParam)
+                .uri("http://" + productServiceBaseUrl + "/api/product",
+                        uriBuilder -> uriBuilder.queryParam("skuCode", skuCodes.toArray()).build())
                 .retrieve()
-                .bodyToFlux(ProductResponse.class)
-                .collectList()
+                .bodyToMono(ProductResponse[].class)
                 .block();
+
+        return List.of(productResponseArray);
     }
 
 
