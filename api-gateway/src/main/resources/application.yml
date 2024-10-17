@@ -75,13 +75,13 @@ spring:
             - Method=GET
           filters:
             - SetPath=/api/product/all
-        - id: inventory-service
-          uri: http://${INVENTORY_SERVICE_BASEURL:localhost:8082}
-          predicates:
-            - Path=/inventory
-            - Method=GET
-          filters:
-            - SetPath=/api/inventory
+#        - id: inventory-service
+#          uri: http://${INVENTORY_SERVICE_BASEURL:localhost:8082}
+#          predicates:
+#            - Path=/inventory
+#            - Method=GET
+#          filters:
+#            - SetPath=/api/inventory
         - id: order-service
           uri: http://${ORDER_SERVICE_BASEURL:localhost:8081}
           predicates:
