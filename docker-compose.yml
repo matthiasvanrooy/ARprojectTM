@@ -123,15 +123,12 @@ services:
        condition: service_started
      user-service:
        condition: service_started
-     inventory-service:
-       condition: service_started
    image: matthivr1987/api-gateway
    ports:
      - 8084:8084
    environment:
      PRODUCT_SERVICE_BASEURL: product-service:8080
      ORDER_SERVICE_BASEURL: order-service:8081
-     INVENTORY_SERVICE_BASEURL: inventory-service:8082
      USER_SERVICE_BASEURL: user-service:8083
 
 volumes:
