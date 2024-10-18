@@ -114,7 +114,7 @@ public class UserService {
                 .id(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
-                //.password(user.getPassword())
+                .password(user.getPassword())
                 .productSkucodes(user.getProductSkucodes())
                 .build();
     }
