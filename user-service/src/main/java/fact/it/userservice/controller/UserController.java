@@ -19,7 +19,7 @@ public class UserController {
     private final UserService userservice;
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<UserResponse> getUserByEmail(@RequestParam String email) {
+    public UserResponse getUserByEmail(@RequestParam String email) {
         return userservice.getUserByEmail(email);
     }
 

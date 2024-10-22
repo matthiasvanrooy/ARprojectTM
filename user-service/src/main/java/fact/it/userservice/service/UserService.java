@@ -18,12 +18,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final WebClient.Builder webClientBuilder;
+    private final WebClient webClient;
 
     @Value("${productservice.baseurl}")
     private String productServiceBaseUrl;
 
-        public void createUser(UserRequest userRequest){
+    public void createUser(UserRequest userRequest){
         User user = User.builder()
                 .name(userRequest.getName())
                 .email(userRequest.getEmail())
@@ -38,10 +38,10 @@ public class UserService {
         return mapToUserResponse(user);
     }
 
-    public List<UserResponse> getUserByEmail(String email) {
-        List<User> users = userRepository.findByEmail(email);
+    public UserResponse getUserByEmail(String email) {
+        User user = userRepository.findByEmail(email);
 
-        return users.stream().map(this::mapToUserResponse).toList();
+        return mapToUserResponse(user);
     }
 
 
@@ -86,12 +86,22 @@ public class UserService {
         userRepository.save(user);
     }
 
+//    private List<ProductResponse> getProductBySkuCode(List<String> skuCodes) {
+//        ProductResponse[] productResponseArray = webClientBuilder.build()
+//                .get()
+//                .uri("http://" + productServiceBaseUrl + "/api/product",
+//                        uriBuilder -> uriBuilder.queryParam("skuCode", skuCodes.toArray()).build())
+//                .retrieve()
+//                .bodyToMono(ProductResponse[].class)
+//                .block();
+//
+//        return List.of(productResponseArray);
+
     // Change your UserService call to use a list if your product service method is expecting it
-    private List<ProductResponse> getProductBySkuCode(List<String> skuCodes) {
-        ProductResponse[] productResponseArray = webClientBuilder.build()
-                .get()
+    public List<ProductResponse> getProductBySkuCode(List<String> skuCodes) {
+        ProductResponse[] productResponseArray = webClient.get()
                 .uri("http://" + productServiceBaseUrl + "/api/product",
-                        uriBuilder -> uriBuilder.queryParam("skuCode", skuCodes.toArray()).build())
+                        uriBuilder -> uriBuilder.queryParam("skuCode", skuCodes).build())
                 .retrieve()
                 .bodyToMono(ProductResponse[].class)
                 .block();
