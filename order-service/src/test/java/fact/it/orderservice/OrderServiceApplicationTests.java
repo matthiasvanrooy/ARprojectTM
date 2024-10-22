@@ -7,7 +7,10 @@ import fact.it.orderservice.service.OrderService;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.reactive.function.client.WebClient;
 import fact.it.orderservice.model.Order;
@@ -20,8 +23,10 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 public class OrderServiceApplicationTests {
 
+    @InjectMocks
     private OrderService orderService;
 
     @Mock
@@ -33,7 +38,6 @@ public class OrderServiceApplicationTests {
 
     @BeforeEach
     void setUp() throws IOException {
-        orderRepository = mock(OrderRepository.class);
         mockProductService = new MockWebServer();
         mockInventoryService = new MockWebServer();
         mockProductService.start(8081);
