@@ -1,13 +1,166 @@
 package fact.it.orderservice;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import fact.it.orderservice.dto.*;
+import fact.it.orderservice.model.OrderLineItem;
+import fact.it.orderservice.repository.OrderRepository;
+import fact.it.orderservice.service.OrderService;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import org.junit.jupiter.api.*;
+import org.mockito.Mock;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.reactive.function.client.WebClient;
+import fact.it.orderservice.model.Order;
 
-@SpringBootTest
-class OrderServiceApplicationTests {
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
 
-    @Test
-    void contextLoads() {
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+public class OrderServiceApplicationTests {
+
+    private OrderService orderService;
+
+    @Mock
+    private OrderRepository orderRepository;
+
+    private MockWebServer mockProductService;
+    private MockWebServer mockInventoryService;
+    private WebClient webClient;
+
+    @BeforeEach
+    void setUp() throws IOException {
+        orderRepository = mock(OrderRepository.class);
+        mockProductService = new MockWebServer();
+        mockInventoryService = new MockWebServer();
+        mockProductService.start(8081);
+        mockInventoryService.start(8082);
+
+        webClient = WebClient.builder().build();
+        orderService = new OrderService(orderRepository, webClient);
+
+        // Gebruik .replace("http://", "") om de URL te verkrijgen zonder "http://" er nog eens voor
+        ReflectionTestUtils.setField(orderService, "productServiceBaseUrl", mockProductService.url("/").toString().replace("http://", ""));
+        ReflectionTestUtils.setField(orderService, "inventoryServiceBaseUrl", mockInventoryService.url("/").toString().replace("http://", ""));
     }
 
+    @AfterEach
+    void tearDown() throws IOException {
+        mockProductService.shutdown();
+        mockInventoryService.shutdown();
+    }
+
+    @Test
+    public void testPlaceOrder_Success() throws Exception {
+        // Arrange
+        String skuCode = "sku1";
+        Integer quantity = 2;
+        BigDecimal price = BigDecimal.valueOf(100);
+        String description = "Test Description";
+        String name = "Test Name";
+
+        OrderRequest orderRequest = new OrderRequest();
+        OrderLineItemDto orderLineItemDto = new OrderLineItemDto();
+        orderLineItemDto.setId(1L);
+        orderLineItemDto.setSkuCode(skuCode);
+        orderLineItemDto.setQuantity(quantity);
+        orderRequest.setOrderLineItemsDtoList(Arrays.asList(orderLineItemDto));
+
+        InventoryResponse inventoryResponse = new InventoryResponse();
+        inventoryResponse.setSkuCode(skuCode);
+        inventoryResponse.setInStock(true);
+
+        ProductResponse productResponse = new ProductResponse();
+        productResponse.setSkuCode(skuCode);
+        productResponse.setName(name);
+        productResponse.setDescription(description);
+        productResponse.setPrice(price);
+
+        Order order = new Order();
+        order.setId(1L);
+        order.setOrderNumber("1");
+        OrderLineItem orderLineItem = new OrderLineItem();
+        orderLineItem.setId(1L);
+        orderLineItem.setSkuCode(skuCode);
+        orderLineItem.setQuantity(quantity);
+        orderLineItem.setPrice(price);
+        order.setOrderLineItemsList(Arrays.asList(orderLineItem));
+
+        when(orderRepository.save(any(Order.class))).thenReturn(order);
+
+        // Mocking external service responses
+        mockInventoryService.enqueue(new MockResponse()
+                .setBody("[{\"skuCode\":\"sku1\",\"inStock\":true}]")
+                .addHeader("Content-Type", "application/json"));
+
+        mockProductService.enqueue(new MockResponse()
+                .setBody("[{\"id\":\"1\",\"skuCode\":\"sku1\",\"name\":\"Test Name\",\"description\":\"Test Description\",\"price\":100}]")
+                .addHeader("Content-Type", "application/json"));
+
+        // Act
+        boolean result = orderService.placeOrder(orderRequest);
+
+        // Assert
+        assertTrue(result);
+        verify(orderRepository, times(1)).save(any(Order.class));
+    }
+
+    @Test
+    public void testPlaceOrder_FailureIfOutOfStock() throws Exception {
+        // Arrange
+        String skuCode = "sku1";
+        Integer quantity = 2;
+        BigDecimal price = BigDecimal.valueOf(100);
+        String description = "Test Description";
+        String name = "Test Name";
+
+        OrderRequest orderRequest = new OrderRequest();
+        OrderLineItemDto orderLineItemDto = new OrderLineItemDto();
+        orderLineItemDto.setId(1L);
+        orderLineItemDto.setSkuCode(skuCode);
+        orderLineItemDto.setQuantity(quantity);
+        orderRequest.setOrderLineItemsDtoList(Arrays.asList(orderLineItemDto));
+
+        // Mocking external service responses (Out of stock case)
+        mockInventoryService.enqueue(new MockResponse()
+                .setBody("[{\"skuCode\":\"sku1\",\"inStock\":false}]")
+                .addHeader("Content-Type", "application/json"));
+
+        mockProductService.enqueue(new MockResponse()
+                .setBody("[{\"id\":\"1\",\"skuCode\":\"sku1\",\"name\":\"Test Name\",\"description\":\"Test Description\",\"price\":100}]")
+                .addHeader("Content-Type", "application/json"));
+
+        // Act
+        boolean result = orderService.placeOrder(orderRequest);
+
+        // Assert
+        assertFalse(result);
+        verify(orderRepository, times(0)).save(any(Order.class));
+    }
+
+    @Test
+    public void testGetAllOrders() {
+        // Arrange
+        OrderLineItem orderLineItem1 = new OrderLineItem(1L, "sku1", new BigDecimal("10.00"), 2);
+        OrderLineItem orderLineItem2 = new OrderLineItem(2L, "sku2", new BigDecimal("20.00"), 3);
+
+        Order order1 = new Order(1L, "order1", Arrays.asList(orderLineItem1, orderLineItem2));
+
+        OrderLineItem orderLineItem3 = new OrderLineItem(3L, "sku3", new BigDecimal("30.00"), 4);
+        OrderLineItem orderLineItem4 = new OrderLineItem(4L, "sku4", new BigDecimal("40.00"), 5);
+
+        Order order2 = new Order(2L, "order2", Arrays.asList(orderLineItem3, orderLineItem4));
+
+        when(orderRepository.findAll()).thenReturn(Arrays.asList(order1, order2));
+
+        // Act
+        List<OrderResponse> result = orderService.getAllOrders();
+
+        // Assert
+        assertEquals(2, result.size());
+        verify(orderRepository, times(1)).findAll();
+    }
 }
