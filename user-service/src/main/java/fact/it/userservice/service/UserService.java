@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -86,17 +85,6 @@ public class UserService {
         userRepository.save(user);
     }
 
-//    private List<ProductResponse> getProductBySkuCode(List<String> skuCodes) {
-//        ProductResponse[] productResponseArray = webClientBuilder.build()
-//                .get()
-//                .uri("http://" + productServiceBaseUrl + "/api/product",
-//                        uriBuilder -> uriBuilder.queryParam("skuCode", skuCodes.toArray()).build())
-//                .retrieve()
-//                .bodyToMono(ProductResponse[].class)
-//                .block();
-//
-//        return List.of(productResponseArray);
-
     // Change your UserService call to use a list if your product service method is expecting it
     public List<ProductResponse> getProductBySkuCode(List<String> skuCodes) {
         ProductResponse[] productResponseArray = webClient.get()
@@ -108,16 +96,6 @@ public class UserService {
 
         return List.of(productResponseArray);
     }
-
-
-//    private ProductResponse getProductById(String productId) {
-//        return webClientBuilder.build()
-//                .get()
-//                .uri("http://"+ productServiceBaseUrl + "/api/product/" + productId)
-//                .retrieve()
-//                .bodyToMono(ProductResponse.class)
-//                .block();
-//    }
 
     private UserResponse mapToUserResponse(User user) {
         return UserResponse.builder()

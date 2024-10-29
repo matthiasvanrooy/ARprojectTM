@@ -15,7 +15,6 @@ public class InventoryController {
 
     private final InventoryService inventoryService;
 
-    // http://localhost:8082/api/inventory?skuCode=tube6in&skuCode=beam10ft
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<InventoryResponse> isInStock
