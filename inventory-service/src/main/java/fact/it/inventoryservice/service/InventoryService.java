@@ -1,6 +1,7 @@
 package fact.it.inventoryservice.service;
 
 import fact.it.inventoryservice.dto.InventoryResponse;
+import fact.it.inventoryservice.dto.UpdateStockRequest;
 import fact.it.inventoryservice.model.StockItem;
 import fact.it.inventoryservice.repository.InventoryRepository;
 import jakarta.annotation.PostConstruct;
@@ -38,6 +39,16 @@ public class InventoryService {
             inventoryRepository.save(stockItem1);
             inventoryRepository.save(stockItem2);
         }
+    }
+
+    public void updateStock(UpdateStockRequest updateStockRequest) {
+        StockItem stockItem = inventoryRepository.findBySkuCode(updateStockRequest.getSkuCode());
+        int newQuantity = stockItem.getQuantity() - updateStockRequest.getQuantity();
+        if (newQuantity < 0) {
+            throw new IllegalArgumentException("Stock quantity cannot be less than zero");
+        }
+        stockItem.setQuantity(newQuantity);
+        inventoryRepository.save(stockItem);
     }
 
     @Transactional(readOnly = true)

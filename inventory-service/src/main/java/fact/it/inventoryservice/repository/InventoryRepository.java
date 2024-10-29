@@ -12,4 +12,6 @@ import java.util.List;
 @Transactional
 public interface InventoryRepository extends JpaRepository<StockItem, Long> {
     List<StockItem> findBySkuCodeIn(List<String> skuCode);
+
+    StockItem findBySkuCode(String skuCode);
 }

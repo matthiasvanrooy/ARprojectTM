@@ -1,6 +1,7 @@
 package fact.it.inventoryservice.controller;
 
 import fact.it.inventoryservice.dto.InventoryResponse;
+import fact.it.inventoryservice.dto.UpdateStockRequest;
 import fact.it.inventoryservice.service.InventoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,5 +21,11 @@ public class InventoryController {
     public List<InventoryResponse> isInStock
     (@RequestParam List<String> skuCode) {
         return inventoryService.isInStock(skuCode);
+    }
+
+    @PutMapping
+    @ResponseStatus(HttpStatus.OK)
+    public void updateStock(@RequestBody UpdateStockRequest updateStockRequest) {
+        inventoryService.updateStock(updateStockRequest);
     }
 }

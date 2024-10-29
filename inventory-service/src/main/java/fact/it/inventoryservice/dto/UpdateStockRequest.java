@@ -1,4 +1,4 @@
-package fact.it.orderservice.dto;
+package fact.it.inventoryservice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class InventoryResponse {
+public class UpdateStockRequest {
     private String skuCode;
-    private boolean isInStock;
-    private int quantity;
+    private Integer quantity;
 }

@@ -76,6 +76,7 @@ public class OrderServiceApplicationTests {
         InventoryResponse inventoryResponse = new InventoryResponse();
         inventoryResponse.setSkuCode(skuCode);
         inventoryResponse.setInStock(true);
+        inventoryResponse.setQuantity(1);
 
         ProductResponse productResponse = new ProductResponse();
         productResponse.setSkuCode(skuCode);
@@ -97,12 +98,16 @@ public class OrderServiceApplicationTests {
 
         // Mocking external service responses
         mockInventoryService.enqueue(new MockResponse()
-                .setBody("[{\"skuCode\":\"sku1\",\"inStock\":true}]")
+                .setBody("[{\"skuCode\":\"sku1\",\"inStock\":true,\"quantity\":10}]")
                 .addHeader("Content-Type", "application/json"));
 
         mockProductService.enqueue(new MockResponse()
                 .setBody("[{\"id\":\"1\",\"skuCode\":\"sku1\",\"name\":\"Test Name\",\"description\":\"Test Description\",\"price\":100}]")
                 .addHeader("Content-Type", "application/json"));
+
+        // Mocking the update stock request
+        mockInventoryService.enqueue(new MockResponse()
+                .setResponseCode(200));
 
         // Act
         boolean result = orderService.placeOrder(orderRequest);
