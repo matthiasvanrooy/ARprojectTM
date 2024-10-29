@@ -1,6 +1,7 @@
 package fact.it.inventoryservice;
 
 import fact.it.inventoryservice.dto.InventoryResponse;
+import fact.it.inventoryservice.dto.UpdateStockRequest;
 import fact.it.inventoryservice.model.StockItem;
 import fact.it.inventoryservice.repository.InventoryRepository;
 import fact.it.inventoryservice.service.InventoryService;
@@ -10,7 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -49,5 +49,26 @@ public class InventoryServiceApplicationTests {
         assertEquals(true, inventoryResponses.get(0).isInStock());
         assertEquals("sku2", inventoryResponses.get(1).getSkuCode());
         assertEquals(false, inventoryResponses.get(1).isInStock());
+    }
+
+    @Test
+    public void testUpdateStock() {
+        // Arrange
+        StockItem stockItem = new StockItem();
+        stockItem.setSkuCode("sku1");
+        stockItem.setQuantity(10);
+
+        UpdateStockRequest updateStockRequest = new UpdateStockRequest();
+        updateStockRequest.setSkuCode("sku1");
+        updateStockRequest.setQuantity(5);
+
+        when(inventoryRepository.findBySkuCode("sku1")).thenReturn(stockItem);
+
+        // Act
+        inventoryService.updateStock(updateStockRequest);
+
+        // Assert
+        verify(inventoryRepository, times(1)).save(stockItem);
+        assertEquals(5, stockItem.getQuantity());
     }
 }
