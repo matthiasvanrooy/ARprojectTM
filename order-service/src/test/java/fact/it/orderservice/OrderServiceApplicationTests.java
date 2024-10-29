@@ -1,6 +1,7 @@
 package fact.it.orderservice;
 
 import fact.it.orderservice.dto.*;
+import fact.it.orderservice.exception.NoMoreStockException;
 import fact.it.orderservice.model.OrderLineItem;
 import fact.it.orderservice.repository.OrderRepository;
 import fact.it.orderservice.service.OrderService;
@@ -63,32 +64,16 @@ public class OrderServiceApplicationTests {
         String skuCode = "sku1";
         Integer quantity = 2;
         BigDecimal price = BigDecimal.valueOf(100);
-        String description = "Test Description";
-        String name = "Test Name";
 
         OrderRequest orderRequest = new OrderRequest();
         OrderLineItemDto orderLineItemDto = new OrderLineItemDto();
-        orderLineItemDto.setId(1L);
         orderLineItemDto.setSkuCode(skuCode);
         orderLineItemDto.setQuantity(quantity);
         orderRequest.setOrderLineItemsDtoList(Arrays.asList(orderLineItemDto));
 
-        InventoryResponse inventoryResponse = new InventoryResponse();
-        inventoryResponse.setSkuCode(skuCode);
-        inventoryResponse.setInStock(true);
-        inventoryResponse.setQuantity(1);
-
-        ProductResponse productResponse = new ProductResponse();
-        productResponse.setSkuCode(skuCode);
-        productResponse.setName(name);
-        productResponse.setDescription(description);
-        productResponse.setPrice(price);
-
         Order order = new Order();
-        order.setId(1L);
         order.setOrderNumber("1");
         OrderLineItem orderLineItem = new OrderLineItem();
-        orderLineItem.setId(1L);
         orderLineItem.setSkuCode(skuCode);
         orderLineItem.setQuantity(quantity);
         orderLineItem.setPrice(price);
@@ -122,31 +107,27 @@ public class OrderServiceApplicationTests {
         // Arrange
         String skuCode = "sku1";
         Integer quantity = 2;
-        BigDecimal price = BigDecimal.valueOf(100);
-        String description = "Test Description";
-        String name = "Test Name";
 
         OrderRequest orderRequest = new OrderRequest();
         OrderLineItemDto orderLineItemDto = new OrderLineItemDto();
-        orderLineItemDto.setId(1L);
         orderLineItemDto.setSkuCode(skuCode);
         orderLineItemDto.setQuantity(quantity);
         orderRequest.setOrderLineItemsDtoList(Arrays.asList(orderLineItemDto));
 
         // Mocking external service responses (Out of stock case)
         mockInventoryService.enqueue(new MockResponse()
-                .setBody("[{\"skuCode\":\"sku1\",\"inStock\":false}]")
+                .setBody("[{\"skuCode\":\"sku1\",\"inStock\":false,\"quantity\":1}]")
                 .addHeader("Content-Type", "application/json"));
 
         mockProductService.enqueue(new MockResponse()
                 .setBody("[{\"id\":\"1\",\"skuCode\":\"sku1\",\"name\":\"Test Name\",\"description\":\"Test Description\",\"price\":100}]")
                 .addHeader("Content-Type", "application/json"));
 
-        // Act
-        boolean result = orderService.placeOrder(orderRequest);
+        // Act & Assert
+        assertThrows(NoMoreStockException.class, () -> {
+            orderService.placeOrder(orderRequest);
+        });
 
-        // Assert
-        assertFalse(result);
         verify(orderRepository, times(0)).save(any(Order.class));
     }
 

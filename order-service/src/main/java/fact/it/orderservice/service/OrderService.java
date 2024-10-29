@@ -31,32 +31,40 @@ public class OrderService {
     private String inventoryServiceBaseUrl;
 
     public boolean placeOrder(OrderRequest orderRequest) {
-        try {
         Order order = new Order();
         order.setOrderNumber(UUID.randomUUID().toString());
 
         List<OrderLineItem> orderLineItems = orderRequest.getOrderLineItemsDtoList()
                 .stream()
                 .map(this::mapToOrderLineItem)
-                .toList();
+                .collect(Collectors.toList());
 
         order.setOrderLineItemsList(orderLineItems);
 
         List<String> skuCodes = order.getOrderLineItemsList().stream()
                 .map(OrderLineItem::getSkuCode)
-                .toList();
+                .collect(Collectors.toList());
 
-        InventoryResponse[] inventoryResponseArray = webClient.get()
-                .uri("http://" + inventoryServiceBaseUrl + "/api/inventory",
-                        uriBuilder -> uriBuilder.queryParam("skuCode", skuCodes).build())
-                .retrieve()
-                .bodyToMono(InventoryResponse[].class)
-                .block();
+        try {
+            // Check stock availability
+            InventoryResponse[] inventoryResponseArray = webClient.get()
+                    .uri("http://" + inventoryServiceBaseUrl + "/api/inventory",
+                            uriBuilder -> uriBuilder.queryParam("skuCode", skuCodes).build())
+                    .retrieve()
+                    .bodyToMono(InventoryResponse[].class)
+                    .block();
 
-        boolean allProductsInStock = Arrays.stream(inventoryResponseArray)
-                .allMatch(InventoryResponse::isInStock);
+            // Ensure all products are in stock and sufficient quantities are available
+            for (OrderLineItem item : order.getOrderLineItemsList()) {
+                boolean productInStock = Arrays.stream(inventoryResponseArray)
+                        .anyMatch(inv -> inv.getSkuCode().equals(item.getSkuCode()) && inv.getQuantity() >= item.getQuantity());
 
-        if(allProductsInStock){
+                if (!productInStock) {
+                    throw new NoMoreStockException("Not enough stock available for SKU: " + item.getSkuCode());
+                }
+            }
+
+            // Retrieve product details
             ProductResponse[] productResponseArray = webClient.get()
                     .uri("http://" + productServiceBaseUrl + "/api/product",
                             uriBuilder -> uriBuilder.queryParam("skuCode", skuCodes).build())
@@ -64,37 +72,36 @@ public class OrderService {
                     .bodyToMono(ProductResponse[].class)
                     .block();
 
-            order.getOrderLineItemsList().stream()
-                    .map(orderItem -> {
-                        ProductResponse product = Arrays.stream(productResponseArray)
-                                .filter(p -> p.getSkuCode().equals(orderItem.getSkuCode()))
-                                .findFirst()
-                                .orElse(null);
-                        if (product != null) {
-                            orderItem.setPrice(product.getPrice());
-                        }
-                        return orderItem;
-                    })
-                    .collect(Collectors.toList());
-
+            // Set prices for order line items
             order.getOrderLineItemsList().forEach(orderItem -> {
+                ProductResponse product = Arrays.stream(productResponseArray)
+                        .filter(p -> p.getSkuCode().equals(orderItem.getSkuCode()))
+                        .findFirst()
+                        .orElse(null);
+                if (product != null) {
+                    orderItem.setPrice(product.getPrice());
+                }
+            });
+
+            // Update stock levels
+            for (OrderLineItem orderItem : order.getOrderLineItemsList()) {
                 webClient.put()
                         .uri("http://" + inventoryServiceBaseUrl + "/api/inventory/updateStock")
                         .bodyValue(new UpdateStockRequest(orderItem.getSkuCode(), orderItem.getQuantity()))
                         .retrieve()
                         .bodyToMono(Void.class)
                         .block();
-            });
+            }
 
+            // Save order to repository
             orderRepository.save(order);
             return true;
-        } else {
-            return false;
-        }
-        } catch (Exception e) {
-            throw new NoMoreStockException("Not enough stock available!");
+
+        } catch (NoMoreStockException e) {
+            throw e; // Rethrow specific exception for clarity
         }
     }
+
 
     public List<OrderResponse> getAllOrders() {
         List<Order> orders = orderRepository.findAll();
