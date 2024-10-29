@@ -1,6 +1,7 @@
 package fact.it.orderservice.service;
 
 import fact.it.orderservice.dto.*;
+import fact.it.orderservice.exception.NoMoreStockException;
 import fact.it.orderservice.model.Order;
 import fact.it.orderservice.model.OrderLineItem;
 import fact.it.orderservice.repository.OrderRepository;
@@ -30,6 +31,7 @@ public class OrderService {
     private String inventoryServiceBaseUrl;
 
     public boolean placeOrder(OrderRequest orderRequest) {
+        try {
         Order order = new Order();
         order.setOrderNumber(UUID.randomUUID().toString());
 
@@ -75,10 +77,22 @@ public class OrderService {
                     })
                     .collect(Collectors.toList());
 
+            order.getOrderLineItemsList().forEach(orderItem -> {
+                webClient.put()
+                        .uri("http://" + inventoryServiceBaseUrl + "/api/inventory/updateStock")
+                        .bodyValue(new UpdateStockRequest(orderItem.getSkuCode(), orderItem.getQuantity()))
+                        .retrieve()
+                        .bodyToMono(Void.class)
+                        .block();
+            });
+
             orderRepository.save(order);
             return true;
         } else {
             return false;
+        }
+        } catch (Exception e) {
+            throw new NoMoreStockException("Not enough stock available!");
         }
     }
 
