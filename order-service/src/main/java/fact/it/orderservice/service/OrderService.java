@@ -86,7 +86,7 @@ public class OrderService {
             // Update stock levels
             for (OrderLineItem orderItem : order.getOrderLineItemsList()) {
                 webClient.put()
-                        .uri("http://" + inventoryServiceBaseUrl + "/api/inventory/updateStock")
+                        .uri("http://" + inventoryServiceBaseUrl + "/api/inventory")
                         .bodyValue(new UpdateStockRequest(orderItem.getSkuCode(), orderItem.getQuantity()))
                         .retrieve()
                         .bodyToMono(Void.class)
