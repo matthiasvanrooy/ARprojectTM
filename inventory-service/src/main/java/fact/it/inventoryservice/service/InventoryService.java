@@ -59,6 +59,7 @@ public class InventoryService {
                         InventoryResponse.builder()
                                 .skuCode(stockItem.getSkuCode())
                                 .isInStock(stockItem.getQuantity() > 0)
+                                .quantity(stockItem.getQuantity())
                                 .build()
                 ).toList();
     }
