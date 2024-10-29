@@ -51,12 +51,6 @@ public class ProductService {
         return products.stream().map(this::mapToProductResponse).toList();
     }
 
-//    public ProductResponse getProductById(String productId) {
-//        return productRepository.findById(productId)
-//                .map(this::mapToProductResponse)
-//                .orElse(null);
-//    }
-
     public List<ProductResponse> getProductBySkuCode(List<String> skuCode) {
         List<Product> products = productRepository.findBySkuCodeIn(skuCode);
 
@@ -65,7 +59,6 @@ public class ProductService {
 
     private ProductResponse mapToProductResponse(Product product) {
         return ProductResponse.builder()
-                //.id(product.getId())
                 .skuCode(product.getSkuCode())
                 .name(product.getName())
                 .category(product.getCategory())

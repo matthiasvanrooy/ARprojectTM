@@ -118,21 +118,21 @@ public class UserServiceApplicationTests {
 	}
 
 	@Test
-public void testUpdateUser() {
-	// Arrange
-	when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+	public void testUpdateUser() {
+		// Arrange
+		when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
-	// Act
-	UserResponse updatedUser = userService.updateUser(1L, userRequest);
+		// Act
+		UserResponse updatedUser = userService.updateUser(1L, userRequest);
 
-	// Assert
-	assertNotNull(updatedUser);
-	assertEquals("Jane Doe", updatedUser.getName());
-	assertEquals("jane@example.com", updatedUser.getEmail());
-	assertEquals("newpassword123", updatedUser.getPassword());
-	verify(userRepository, times(1)).findById(1L);
-	verify(userRepository, times(1)).save(any(User.class));
-}
+		// Assert
+		assertNotNull(updatedUser);
+		assertEquals("Jane Doe", updatedUser.getName());
+		assertEquals("jane@example.com", updatedUser.getEmail());
+		assertEquals("newpassword123", updatedUser.getPassword());
+		verify(userRepository, times(1)).findById(1L);
+		verify(userRepository, times(1)).save(any(User.class));
+	}
 
 	@Test
 	public void testGetUserProducts() throws Exception {
@@ -157,30 +157,30 @@ public void testUpdateUser() {
 		verify(userRepository, times(1)).findById(1L);
 	}
 
-@Test
-public void testAddProductToUser() {
-    // Arrange
-    User user1 = new User(1L, "John Doe", "john@example.com", "password123", new ArrayList<>());
-    when(userRepository.findById(1L)).thenReturn(Optional.of(user1));
+	@Test
+	public void testAddProductToUser() {
+    	// Arrange
+    	User user1 = new User(1L, "John Doe", "john@example.com", "password123", new ArrayList<>());
+    	when(userRepository.findById(1L)).thenReturn(Optional.of(user1));
 
-    // Mock the product service response
-    ProductResponse productResponse = new ProductResponse("sku1", "Product 1", Category.VEGETABLE, BigDecimal.valueOf(100));
-    mockProductService.enqueue(new MockResponse()
-            .setBody("[{\"skuCode\":\"sku1\",\"name\":\"Product 1\",\"category\":\"VEGETABLE\",\"price\":100}]")
-            .addHeader("Content-Type", "application/json"));
+    	// Mock the product service response
+    	ProductResponse productResponse = new ProductResponse("sku1", "Product 1", Category.VEGETABLE, BigDecimal.valueOf(100));
+    	mockProductService.enqueue(new MockResponse()
+            	.setBody("[{\"skuCode\":\"sku1\",\"name\":\"Product 1\",\"category\":\"VEGETABLE\",\"price\":100}]")
+            	.addHeader("Content-Type", "application/json"));
 
-    // Act
-    userService.addProductToUser(1L, "sku1");
-    List<ProductResponse> products = userService.getProductBySkuCode(Collections.singletonList("sku1"));
+    	// Act
+    	userService.addProductToUser(1L, "sku1");
+    	List<ProductResponse> products = userService.getProductBySkuCode(Collections.singletonList("sku1"));
 
-    // Assert
-    assertTrue(user1.getProductSkucodes().contains("sku1"));
-    assertNotNull(products);
-    assertEquals(1, products.size());
-    assertEquals("sku1", products.get(0).getSkuCode());
-    assertEquals("Product 1", products.get(0).getName());
-    verify(userRepository, times(1)).save(user1);
-}
+    	// Assert
+    	assertTrue(user1.getProductSkucodes().contains("sku1"));
+    	assertNotNull(products);
+    	assertEquals(1, products.size());
+    	assertEquals("sku1", products.get(0).getSkuCode());
+    	assertEquals("Product 1", products.get(0).getName());
+    	verify(userRepository, times(1)).save(user1);
+	}
 
 	@Test
 	public void testAddProductToUser_AlreadyScanned() {

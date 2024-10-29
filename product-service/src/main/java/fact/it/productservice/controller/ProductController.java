@@ -21,17 +21,10 @@ public class ProductController {
         return productService.getProductBySkuCode(skuCode);
     }
 
-
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     public List<ProductResponse> getAllProducts() {
         return productService.getAllProducts();
     }
-
-//    @GetMapping("/{productId}")
-//    @ResponseStatus(HttpStatus.OK)
-//    public ProductResponse getProductById(@PathVariable String productId) {
-//        return productService.getProductById(productId);
-//    }
 }
 
