@@ -12,7 +12,6 @@ Ons diagram wat betreft samenhang services en gateway vind je als draw.io-bestan
 
 Uitbreidingen:
 We hebben voor iedere service unittesten toegevoegd aan de hand van mockito en MockWebServers die voor 100% coverage zorgen.
-We maken gebruik van een beperkte eigen authentication.
 
 De link naar het flutterproject op github: https://github.com/TomGijsbers/florafocus
 
