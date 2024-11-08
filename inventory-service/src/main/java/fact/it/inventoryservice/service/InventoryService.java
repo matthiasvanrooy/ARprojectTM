@@ -23,21 +23,31 @@ public class InventoryService {
     @PostConstruct
     public void loadData() {
         if(inventoryRepository.count() <= 0){
-            StockItem stockItem = new StockItem();
-            stockItem.setSkuCode("APPLE001");
-            stockItem.setQuantity(100);
-
             StockItem stockItem1 = new StockItem();
-            stockItem1.setSkuCode("PEAR001");
-            stockItem1.setQuantity(50);
+            stockItem1.setSkuCode("APP001");
+            stockItem1.setQuantity(100);
 
             StockItem stockItem2 = new StockItem();
-            stockItem2.setSkuCode("APPLE002");
-            stockItem2.setQuantity(1);
+            stockItem2.setSkuCode("PEA001");
+            stockItem2.setQuantity(50);
 
-            inventoryRepository.save(stockItem);
+            StockItem stockItem3 = new StockItem();
+            stockItem3.setSkuCode("CUC001");
+            stockItem3.setQuantity(1);
+
+            StockItem stockItem4 = new StockItem();
+            stockItem4.setSkuCode("PEP001");
+            stockItem4.setQuantity(20);
+
+            StockItem stockItem5 = new StockItem();
+            stockItem5.setSkuCode("CAR001");
+            stockItem5.setQuantity(5);
+
             inventoryRepository.save(stockItem1);
             inventoryRepository.save(stockItem2);
+            inventoryRepository.save(stockItem3);
+            inventoryRepository.save(stockItem4);
+            inventoryRepository.save(stockItem5);
         }
     }
 
