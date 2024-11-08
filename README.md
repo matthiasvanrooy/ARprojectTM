@@ -45,15 +45,16 @@ GET /products/all (get all products)
 ![image](https://github.com/user-attachments/assets/8d846778-a4c0-41ee-b521-e94077ecf37a)
 
 GET /orders (get all orders)
-![image](https://github.com/user-attachments/assets/3253303f-fe32-45e7-936e-6f05e41dd145)
+![image](https://github.com/user-attachments/assets/f1cebc04-e83e-40ec-a93e-6cb76e12fdfd)
 
 POST /orders (create a new order)
-![image](https://github.com/user-attachments/assets/2ffc25a3-7b72-49ce-bf07-3e43c4af9d92)
+![image](https://github.com/user-attachments/assets/1f6739cc-975d-4d44-8798-fe5a71027bab)
 
 Niet via Gateway:
 
 GET /api/inventory?skuCode= (get inventoryitem by skuCode)
-![image](https://github.com/user-attachments/assets/6039d283-6ee2-420c-bb69-b4d93e737255)
+![image](https://github.com/user-attachments/assets/b29f1e05-5027-4bb8-be3b-3ccce805ee46)
 
 PUT /api/inventory (subtract ordered amount from stockquantity)
-![image](https://github.com/user-attachments/assets/ba73200f-e357-4509-9249-e61c9fcdd0fa)
+![image](https://github.com/user-attachments/assets/7d85b282-b69d-46ae-82b9-8f0324713d12)
+
