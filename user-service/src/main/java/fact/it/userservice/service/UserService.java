@@ -85,7 +85,6 @@ public class UserService {
         userRepository.save(user);
     }
 
-    // Change your UserService call to use a list if your product service method is expecting it
     public List<ProductResponse> getProductBySkuCode(List<String> skuCodes) {
         ProductResponse[] productResponseArray = webClient.get()
                 .uri("http://" + productServiceBaseUrl + "/api/product",

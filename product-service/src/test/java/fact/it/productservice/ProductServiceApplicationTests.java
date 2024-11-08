@@ -36,6 +36,7 @@ public class ProductServiceApplicationTests {
         product1 = new Product();
         product1.setSkuCode("SKU123");
         product1.setName("Test Product 1");
+        product1.setDescription("Test Description 1");
         product1.setPrice(BigDecimal.valueOf(100));
         product1.setCategory(Category.valueOf("VEGETABLE"));
     }
@@ -51,6 +52,7 @@ public class ProductServiceApplicationTests {
         Product product2 = new Product();
         product2.setSkuCode("SKU124");
         product2.setName("Test Product 2");
+        product2.setDescription("Test Description 2");
         product2.setPrice(BigDecimal.valueOf(200));
         product2.setCategory(Category.valueOf("FRUIT"));
 
@@ -65,6 +67,8 @@ public class ProductServiceApplicationTests {
         assertEquals("SKU124", products.get(1).getSkuCode());
         assertEquals("Test Product 1", products.get(0).getName());
         assertEquals("Test Product 2", products.get(1).getName());
+        assertEquals("Test Description 1", products.get(0).getDescription());
+        assertEquals("Test Description 2", products.get(1).getDescription());
         assertEquals(BigDecimal.valueOf(100), products.get(0).getPrice());
         assertEquals(BigDecimal.valueOf(200), products.get(1).getPrice());
         assertEquals(Category.valueOf("VEGETABLE"), products.get(0).getCategory());
@@ -86,6 +90,7 @@ public class ProductServiceApplicationTests {
         assertEquals(1, products.size());
         assertEquals("SKU123", products.get(0).getSkuCode());
         assertEquals("Test Product 1", products.get(0).getName());
+        assertEquals("Test Description 1", products.get(0).getDescription());
         assertEquals(BigDecimal.valueOf(100), products.get(0).getPrice());
         assertEquals(Category.valueOf("VEGETABLE"), products.get(0).getCategory());
 

@@ -140,10 +140,8 @@ public class UserServiceApplicationTests {
 		when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
 		// Mock the product service response
-		ProductResponse productResponse1 = new ProductResponse("sku1", "Product 1", Category.VEGETABLE, BigDecimal.valueOf(100));
-		ProductResponse productResponse2 = new ProductResponse("sku2", "Product 2", Category.FRUIT, BigDecimal.valueOf(200));
 		mockProductService.enqueue(new MockResponse()
-				.setBody("[{\"skuCode\":\"sku1\",\"name\":\"Product 1\",\"category\":\"VEGETABLE\",\"price\":100},{\"skuCode\":\"sku2\",\"name\":\"Product 2\",\"category\":\"FRUIT\",\"price\":200}]")
+				.setBody("[{\"skuCode\":\"sku1\",\"name\":\"Product 1\",\"description\":\"heerlijk sappig\",\"category\":\"VEGETABLE\",\"price\":100},{\"skuCode\":\"sku2\",\"name\":\"Product 2\",\"description\":\"superzoet\",\"category\":\"FRUIT\",\"price\":200}]")
 				.addHeader("Content-Type", "application/json"));
 
 		// Act
@@ -154,6 +152,7 @@ public class UserServiceApplicationTests {
 		assertEquals(2, products.size());
 		assertEquals("sku1", products.get(0).getSkuCode());
 		assertEquals("Product 1", products.get(0).getName());
+		assertEquals("superzoet", products.get(1).getDescription());
 		verify(userRepository, times(1)).findById(1L);
 	}
 
@@ -164,9 +163,8 @@ public class UserServiceApplicationTests {
     	when(userRepository.findById(1L)).thenReturn(Optional.of(user1));
 
     	// Mock the product service response
-    	ProductResponse productResponse = new ProductResponse("sku1", "Product 1", Category.VEGETABLE, BigDecimal.valueOf(100));
     	mockProductService.enqueue(new MockResponse()
-            	.setBody("[{\"skuCode\":\"sku1\",\"name\":\"Product 1\",\"category\":\"VEGETABLE\",\"price\":100}]")
+            	.setBody("[{\"skuCode\":\"sku1\",\"name\":\"Product 1\",\"description\":\"lekker zeg\",\"category\":\"VEGETABLE\",\"price\":100}]")
             	.addHeader("Content-Type", "application/json"));
 
     	// Act
@@ -179,6 +177,7 @@ public class UserServiceApplicationTests {
     	assertEquals(1, products.size());
     	assertEquals("sku1", products.get(0).getSkuCode());
     	assertEquals("Product 1", products.get(0).getName());
+		assertEquals("lekker zeg", products.get(0).getDescription());
     	verify(userRepository, times(1)).save(user1);
 	}
 
@@ -199,9 +198,8 @@ public class UserServiceApplicationTests {
 	@Test
 	public void testGetProductBySkuCode() {
 		// Mock the product service response
-		ProductResponse productResponse = new ProductResponse("sku1", "Product 1", Category.VEGETABLE, BigDecimal.valueOf(100));
 		mockProductService.enqueue(new MockResponse()
-				.setBody("[{\"skuCode\":\"sku1\",\"name\":\"Product 1\",\"category\":\"VEGETABLE\",\"price\":100}]")
+				.setBody("[{\"skuCode\":\"sku1\",\"name\":\"Product 1\",\"description\":\"geweldig\",\"category\":\"VEGETABLE\",\"price\":100}]")
 				.addHeader("Content-Type", "application/json"));
 
 		// Act
@@ -212,6 +210,7 @@ public class UserServiceApplicationTests {
 		assertEquals(1, products.size());
 		assertEquals("sku1", products.get(0).getSkuCode());
 		assertEquals("Product 1", products.get(0).getName());
+		assertEquals("geweldig", products.get(0).getDescription());
 		verify(userRepository, times(0)).findById(1L);
 	}
 }
