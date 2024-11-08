@@ -18,19 +18,19 @@ De link naar het flutterproject op github: https://github.com/TomGijsbers/floraf
 
 Werking van gateway op port 8084 Postman:
 GET /users/all (get all users)
-![image](https://github.com/user-attachments/assets/6f039054-218a-4dd9-acc2-486fd5b703b3)
+![image](https://github.com/user-attachments/assets/94b5bf33-6f0a-4f36-af20-1c6cd21c99f9)
 
 GET /users?email (get user through email)
 ![image](https://github.com/user-attachments/assets/1832cd22-01be-4e5a-8d24-b67333acedeb)
 
 GET /users/{id} (get user through id)
-![image](https://github.com/user-attachments/assets/b3220d6e-2adb-4201-8295-e04a75bb8672)
+![image](https://github.com/user-attachments/assets/9fe3603c-ab33-450b-b36e-df2bfaeeae7d)
 
 POST /users (create new user)
 ![image](https://github.com/user-attachments/assets/3b5a5b90-3641-46be-a77b-ef527b03f494)
 
 GET /users/{id}/products (get the products already collected by the user)
-![image](https://github.com/user-attachments/assets/e137db8a-498e-4f47-a1c3-97b8ea6895b1)
+![image](https://github.com/user-attachments/assets/a794f995-3d82-41bc-92ba-834618fe84f6)
 
 PUT /users/{id} (update user info)
 ![image](https://github.com/user-attachments/assets/36e171ac-6cb6-4a41-bbd0-bcb6818ca3df)
