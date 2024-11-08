@@ -39,10 +39,10 @@ POST /users/{id}/products/{skuCode} (add product to a user)
 ![image](https://github.com/user-attachments/assets/0c94b7df-33d1-4d40-a246-b475217857c9)
 
 GET /products?skuCode= (get a product based on skucode)
-![image](https://github.com/user-attachments/assets/2cc98efb-711b-4b5d-bbd0-e8898907b2cc)
+![image](https://github.com/user-attachments/assets/4ea41ba7-9b71-4013-a513-673d98fe4447)
 
 GET /products/all (get all products)
-![image](https://github.com/user-attachments/assets/c9324122-8801-4a8a-8967-3f06afe0ff85)
+![image](https://github.com/user-attachments/assets/8d846778-a4c0-41ee-b521-e94077ecf37a)
 
 GET /orders (get all orders)
 ![image](https://github.com/user-attachments/assets/3253303f-fe32-45e7-936e-6f05e41dd145)
