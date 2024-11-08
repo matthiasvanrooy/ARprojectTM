@@ -12,6 +12,7 @@ Ons diagram wat betreft samenhang services en gateway vind je als draw.io-bestan
 
 Uitbreidingen:
 We hebben voor iedere service unittesten toegevoegd aan de hand van mockito en MockWebServers die voor 100% coverage zorgen.
+Hosting van de API gebeurt via Nicolas' eigen server.
 
 De link naar het flutterproject op github: https://github.com/TomGijsbers/florafocus
 
