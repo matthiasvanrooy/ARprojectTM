@@ -21,7 +21,7 @@ GET /users/all (get all users)
 ![image](https://github.com/user-attachments/assets/94b5bf33-6f0a-4f36-af20-1c6cd21c99f9)
 
 GET /users?email (get user through email)
-![image](https://github.com/user-attachments/assets/1832cd22-01be-4e5a-8d24-b67333acedeb)
+![image](https://github.com/user-attachments/assets/87353eea-669c-4326-aef9-6c4d7ab23143)
 
 GET /users/{id} (get user through id)
 ![image](https://github.com/user-attachments/assets/9fe3603c-ab33-450b-b36e-df2bfaeeae7d)
